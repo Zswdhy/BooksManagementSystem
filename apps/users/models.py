@@ -7,4 +7,4 @@ class Users(AbstractUser):
     type = models.CharField(max_length=16, default="", verbose_name="用户权限")  # root、admin、common
 
     class Meta:
-        db_table = "用户表"
+        db_table = "users"
