@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import pathlib
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -154,3 +154,73 @@ CORS_ALLOW_HEADERS = (
     'x-requested-with',
     'Pragma',
 )
+
+_logs = pathlib.Path('logs')
+_logs.mkdir(exist_ok=True)
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(module)s "
+                      "%(process)d %(thread)d %(message)s"
+        },
+        "standard": {
+            "format": "%(asctime)s [%(filename)s:%(lineno)d] [%(levelname)s]- %(message)s"
+        }
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+        "default": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": _logs.joinpath("default.log"),
+            "formatter": "standard",
+        },
+        "tools": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": _logs.joinpath("tools.log"),
+            "formatter": "standard",
+        },
+        "errors": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": _logs.joinpath("errors.log"),
+            "formatter": "standard",
+        }
+    },
+    "loggers": {
+        "django.db.backends": {
+            "level": "ERROR",
+            "handlers": ["console"],
+            "propagate": False,
+        },
+        # Errors logged by the SDK itself
+        "sentry_sdk": {"level": "ERROR", "handlers": ["console"], "propagate": False},
+        "django.security.DisallowedHost": {
+            "level": "ERROR",
+            "handlers": ["console"],
+            "propagate": False,
+        },
+        "default": {
+            "handlers": ["default"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+        "tools": {
+            "handlers": ["tools"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+        "errors": {
+            "handlers": ["errors"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+}

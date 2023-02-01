@@ -1,0 +1,7 @@
+.idea/
+__pycache__/
+.vscode/*
+.wav
+logs/
+*.log
+../.vscode/launch.json
