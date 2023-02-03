@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+import datetime
 import pathlib
 from pathlib import Path
 
@@ -31,6 +32,7 @@ ALLOWED_HOSTS = ["*"]
 
 THIRD_PARTY_APPS = [
     'rest_framework',
+    'rest_framework_simplejwt',
     'django_filters',
     'corsheaders',  # 跨域
 ]
@@ -131,6 +133,27 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # 用户认证
 AUTH_USER_MODEL = 'users.Users'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(hours=12),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=30),
+    # 'USER_ID_FIELD': "person_id",
+    # 此处id为生成token时使用自定义的用户表时会使用到，USER_ID_FIELD 是自定义用户表的id，不是id时 会报错user_id = getattr(user, api_settings.USER_ID_FIELD)
+    # 'SIGNING_KEY': JWT_SECRET_KEY,
+    # 'JWT_PUBLIC_KEY': JWT_SECRET_KEY,
+    # 'JWT_PAYLOAD_HANDLER': "person_name"
+}
 
 # 跨域增加忽略
 CORS_ALLOW_CREDENTIALS = True
