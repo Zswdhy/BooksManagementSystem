@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
 from rest_framework.validators import UniqueValidator
 
@@ -21,7 +22,8 @@ class UserModelSerializers(ModelSerializer):
 
     class Meta:
         model = Users
-        fields = ["id", "username", "sex", "email", "type", "date_joined"]
+        fields = ["id", "username", "sex", "password", "email", "type", "date_joined"]
+        extra_kwargs = {"password": {"write_only": True}}
 
 
 class UserTestModelSerializers(ModelSerializer):

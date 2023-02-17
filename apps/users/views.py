@@ -1,6 +1,7 @@
 from django.contrib.auth.hashers import check_password
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from apps.users.models import Users
@@ -35,3 +36,9 @@ class UserViewSets(ModelViewSet):
         user.set_password(pwd)
         user.save()
         return Response({"code": 200, "message": "密码修改成功."})
+
+
+class TestSimpleJwt(APIView):
+
+    def get(self, request):
+        return Response({"code": "200", "message": "simple jwt 校验成功"})
